@@ -1,6 +1,8 @@
 # Compiled class files
 *.class
 
+example.env
+
 # Log files
 *.log
 
@@ -80,7 +82,7 @@ Thumbs.db
 .dockerignore
 
 # Environment variables
-.env
+example.env
 .env.local
 .env.development.local
 .env.test.local

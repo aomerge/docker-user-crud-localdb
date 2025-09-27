@@ -23,7 +23,7 @@ services:
     ports:
       - "8082:8082"
     env_file:
-      - .env
+      - example.env
     depends_on:
       - postgres
     networks:
