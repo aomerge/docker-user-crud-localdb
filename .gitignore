@@ -1,7 +1,11 @@
 # Compiled class files
 *.class
 
+# Environment variables - NEVER commit these files
 .env
+.env.*
+!.env.example
+*.env
 
 # Log files
 *.log
