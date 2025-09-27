@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-spring-app
+spec:
+  replicas: {{.Values.replicaCount}}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: {{.Release.Name}}-spring-app
+  template:
+    metadata:
+      labels:
+        app: {{.Release.Name}}-spring-app
+    spec:
+      containers:
+      - name: spring-app
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: {{.Values.service.port}}
+{{- with .Values.livenessProbe }}
+        livenessProbe:
+        {{- toYaml . | nindent 10 }}
+
+        {{- end }}
+{{- with .Values.readinessProbe }}
+        readinessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+{{- with .Values.resources }}
+        resources:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
+{{- with .Values.secrets.secretNames }}
+        envFrom:
+        {{- range . }}
+          - secretRef:
+              name: {{ . | quote }}
+        {{- end }}
+        {{- end }}
+{{- with .Values.env }}
+        env:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Release.Name }}-spring-app
+spec:
+  selector:
+    app: {{.Release.Name}}-spring-app
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: {{.Values.service.port }}
+      targetPort: {{.Values.service.port }}
+      nodePort: 30080

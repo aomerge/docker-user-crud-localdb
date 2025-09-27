@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  app:
+    #build: .
+    #container_name: spring_app
+    image: myapp:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker  # Activa el perfil docker
+      #networks:
+      #- spring-net
+
+  db:
+    image: postgres:15.14
+    #container_name: postgres_db
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - userdb_data:/var/lib/postgresql/data
+      #networks:
+      #- spring-net
+
+volumes:
+  userdb_data:
+
+  #networks:
+  #spring-net:
+  #driver: bridge
+  #driver: overlay

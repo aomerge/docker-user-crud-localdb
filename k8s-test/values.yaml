@@ -1,0 +1,42 @@
+replicaCount: 2
+image:
+  repository: myapp
+  tag: "latest"
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 8082
+#livenessProbe:
+#  httpGet:
+#    path: /actuator/health/liveness
+#    port: 8082            # o nombre del puerto expuesto en el contenedor
+#    scheme: HTTP          # opcional
+#  initialDelaySeconds: 15 # <- estos van aquí (no dentro de httpGet)
+#  periodSeconds: 10
+#  timeoutSeconds: 1
+#  failureThreshold: 3
+
+#readinessProbe:
+#  httpGet:
+#    path: /actuator/health/readiness
+#    port: 8082
+#  initialDelaySeconds: 5
+#  periodSeconds: 10
+# timeoutSeconds: 1
+#  failureThreshold: 3
+
+resources:
+  requests:
+    cpu: "50m"
+    memory: "64Mi"
+  limits:
+    cpu: "200m"
+    memory: "256Mi"
+
+secrets:
+    secretNames:
+      - postgres-secret
+
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: "docker"
